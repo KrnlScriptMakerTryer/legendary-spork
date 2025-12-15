@@ -1,0 +1,241 @@
+:root {
+    --grass-color: #55aa55; /* Bright Green */
+    --red-color: #ff0000;    /* Bright Red */
+    --grey-color: #999999;   /* Medium Stone Grey */
+    --default-avatar-color: #b2b2b2; /* Default Grey Skin */
+    --stud-color: rgba(0, 0, 0, 0.1);
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #1a1a1a;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* -------------------------------------- */
+/* 3D SCENE SETUP */
+/* -------------------------------------- */
+.game-container {
+    width: 600px;
+    height: 400px;
+    perspective: 800px; 
+    perspective-origin: 50% 50%;
+    transform: rotateX(45deg) rotateZ(45deg) translateZ(100px); 
+    position: relative;
+}
+
+/* BASEPLATE (Grass) and RED LINE styling remains the same */
+.baseplate {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background-color: var(--grass-color);
+    transform-style: preserve-3d;
+    transform: rotateX(90deg) translateZ(150px);
+    top: 50%;
+    left: 50%;
+    margin-left: -150px;
+    margin-top: -150px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    background-image: radial-gradient(var(--stud-color) 30%, transparent 30%),
+                      radial-gradient(var(--stud-color) 30%, transparent 30%);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+}
+
+.red-line {
+    position: absolute;
+    width: 20px;
+    height: 300px;
+    background-color: var(--red-color);
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -150px;
+    transform: translateZ(5px); 
+    z-index: 10;
+    background-image: radial-gradient(var(--stud-color) 30%, transparent 30%),
+                      radial-gradient(var(--stud-color) 30%, transparent 30%);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+}
+
+/* GREY BASES styling remains the same */
+.base {
+    position: absolute;
+    width: 50px;
+    height: 30px;
+    background-color: var(--grey-color);
+    transform: translateZ(15px); 
+    z-index: 20;
+    border: 1px solid #777; 
+}
+
+.grey-base-1 { top: 100px; left: 50px; }
+.grey-base-2 { top: 200px; left: 200px; }
+
+.name-tag {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 10px;
+    font-family: sans-serif;
+    padding: 2px 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+/* -------------------------------------- */
+/* GENERAL AVATAR STRUCTURE */
+/* -------------------------------------- */
+.bot {
+    position: absolute;
+    z-index: 30;
+    transform-style: preserve-3d;
+    transition: transform 0.1s linear; 
+    will-change: transform;
+}
+
+.head {
+    width: 15px;
+    height: 15px;
+    border: 1px solid black;
+    transform: translateZ(30px);
+    position: relative;
+    /* Generic face template (eyes and smile) */
+    background-image: 
+        /* Smile */
+        radial-gradient(ellipse at 50% 70%, black 10%, transparent 10%),
+        /* Left Eye */
+        radial-gradient(circle at 35% 45%, black 5%, transparent 5%), 
+        /* Right Eye */
+        radial-gradient(circle at 65% 45%, black 5%, transparent 5%);
+    background-size: 15px 15px;
+    background-repeat: no-repeat;
+}
+
+.body {
+    width: 20px;
+    height: 25px;
+    border: 1px solid black;
+    transform: translateZ(15px) translateX(-2.5px);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Helper mixin for the open jacket design */
+.jacket-style::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black; /* The color of the jacket */
+    /* Black jacket cutout shape */
+    clip-path: polygon(0 0, 100% 0, 100% 40%, 60% 40%, 50% 100%, 40% 40%, 0 40%);
+}
+
+/* -------------------------------------- */
+/* 1. PLAYER (Bacon Hair - White Skin) */
+/* -------------------------------------- */
+#player .head { background-color: white; }
+#player .body { background-color: #0077ff; } /* Blue shirt base */
+#player .body.jacket-style::before { background-color: black; }
+#player .body:after { /* Adding pants below the shirt */
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background-color: #2e2e3a; /* Dark denim pants */
+    z-index: 5;
+}
+
+/* PLAYER HAIR (Bacon Hair) */
+#player .head::before {
+    content: '';
+    position: absolute;
+    top: -5px; 
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background-color: #582900; 
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    transform: rotateX(90deg) translateZ(1px); 
+    z-index: 10;
+}
+
+
+/* -------------------------------------- */
+/* 2. BOT 1 (Red Shirt, Black Hair - Pale Skin) */
+/* -------------------------------------- */
+#bot-1 .head { background-color: #f7e0c4; } /* Pale Skin */
+#bot-1 .body { background-color: #cc0000; } /* Red shirt base */
+#bot-1 .body.jacket-style::before { background-color: black; }
+#bot-1 .body:after { /* Adding pants */
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background-color: #4b4b4b; /* Dark grey pants */
+    z-index: 5;
+}
+
+/* BOT 1 HAIR (Short Black Hair) */
+#bot-1 .head::before {
+    content: '';
+    position: absolute;
+    top: -5px; 
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background-color: #1a1a1a; /* Black Hair */
+    border-radius: 5px; /* Simple block hair */
+    transform: rotateX(90deg) translateZ(1px); 
+    z-index: 10;
+}
+
+/* -------------------------------------- */
+/* 3. BOT 2 (Brown Messy Hair, Blue Shirt - Tan Skin) */
+/* -------------------------------------- */
+#bot-2 .head { background-color: #e0ac93; } /* Tan Skin */
+#bot-2 .body { background-color: #1a6496; } /* Navy Blue shirt base */
+#bot-2 .body.jacket-style::before { background-color: black; }
+#bot-2 .body:after { /* Adding pants */
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background-color: #000000; /* Black Pants */
+    z-index: 5;
+}
+
+/* BOT 2 HAIR (Brown Messy Hair) */
+#bot-2 .head::before {
+    content: '';
+    position: absolute;
+    top: -5px; 
+    left: 0;
+    width: 100%;
+    height: 12px; /* Slightly taller hair */
+    background-color: #964b00; /* Medium Brown Hair */
+    /* Messy, angled look */
+    clip-path: polygon(0% 100%, 15% 30%, 35% 100%, 50% 20%, 65% 100%, 85% 30%, 100% 100%);
+    border-radius: 5px; 
+    transform: rotateX(90deg) translateZ(1px); 
+    z-index: 10;
+}
+
